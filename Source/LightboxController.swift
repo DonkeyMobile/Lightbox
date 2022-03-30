@@ -12,12 +12,13 @@ public protocol LightboxControllerDismissalDelegate: AnyObject {
 }
 
 public protocol LightboxControllerTouchDelegate: AnyObject {
-
+  
   func lightboxController(_ controller: LightboxController, didTouch image: LightboxImage, at index: Int)
+  func downloadLightboxImageOrVideo(_ lightBox: LightboxImage)
 }
 
 open class LightboxController: UIViewController {
-
+  
   // MARK: - Internal views
 
   lazy var scrollView: UIScrollView = { [unowned self] in
@@ -453,6 +454,11 @@ extension LightboxController: HeaderViewDelegate {
     presented = false
     dismissalDelegate?.lightboxControllerWillDismiss(self)
     dismiss(animated: true, completion: nil)
+  }
+  
+  func headerView(_ headerView: HeaderView, didPressDownloadButton downloadButton: UIButton) {
+    let imageToDownload = images[currentPage]
+    imageTouchDelegate?.downloadLightboxImageOrVideo(imageToDownload)
   }
 }
 

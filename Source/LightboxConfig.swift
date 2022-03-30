@@ -56,7 +56,8 @@ public class LightboxConfig {
     public static var size: CGSize?
     public static var text = NSLocalizedString("Close", comment: "")
     public static var image: UIImage?
-
+    public static var tintColor = UIColor.white
+    
     public static var textAttributes: [NSAttributedString.Key: Any] = [
       .font: UIFont.boldSystemFont(ofSize: 16),
       .foregroundColor: UIColor.white,
@@ -67,7 +68,14 @@ public class LightboxConfig {
       }()
     ]
   }
-
+  
+  public struct DownloadButton {
+    public static var enabled = true
+    public static var size: CGSize?
+    public static var image: UIImage?
+    public static var tintColor = UIColor.white
+  }
+  
   public struct DeleteButton {
     public static var enabled = false
     public static var size: CGSize?

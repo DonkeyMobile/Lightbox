@@ -3,33 +3,37 @@ import UIKit
 protocol HeaderViewDelegate: class {
   func headerView(_ headerView: HeaderView, didPressDeleteButton deleteButton: UIButton)
   func headerView(_ headerView: HeaderView, didPressCloseButton closeButton: UIButton)
+  func headerView(_ headerView: HeaderView, didPressDownloadButton downloadButton: UIButton)
 }
 
 open class HeaderView: UIView {
+  
   open fileprivate(set) lazy var closeButton: UIButton = { [unowned self] in
     let title = NSAttributedString(
       string: LightboxConfig.CloseButton.text,
       attributes: LightboxConfig.CloseButton.textAttributes)
-
     let button = UIButton(type: .system)
-
     button.setAttributedTitle(title, for: UIControl.State())
-
-    if let size = LightboxConfig.CloseButton.size {
-      button.frame.size = size
-    } else {
-      button.sizeToFit()
-    }
-
-    button.addTarget(self, action: #selector(closeButtonDidPress(_:)),
-      for: .touchUpInside)
-
+    
+    button.addTarget(self, action: #selector(closeButtonDidPress(_:)), for: .touchUpInside)
     if let image = LightboxConfig.CloseButton.image {
-        button.setBackgroundImage(image, for: UIControl.State())
+      button.setImage(image, for: .normal)
     }
-
+    button.sizeToFit()
+    button.tintColor = LightboxConfig.CloseButton.tintColor
     button.isHidden = !LightboxConfig.CloseButton.enabled
-
+    return button
+  }()
+  
+  open fileprivate(set) lazy var downloadButton: UIButton = { [unowned self] in
+    let button = UIButton(type: .system)
+    button.addTarget(self, action: #selector(downloadButtonDidPress(_:)), for: .touchUpInside)
+    if let image = LightboxConfig.DownloadButton.image {
+      button.setImage(image, for: .normal)
+    }
+    button.sizeToFit()
+    button.tintColor = LightboxConfig.CloseButton.tintColor
+    button.isHidden = !LightboxConfig.DownloadButton.enabled
     return button
   }()
 
@@ -69,7 +73,7 @@ open class HeaderView: UIView {
 
     backgroundColor = UIColor.clear
 
-    [closeButton, deleteButton].forEach { addSubview($0) }
+    [closeButton, deleteButton, downloadButton].forEach { addSubview($0) }
   }
 
   public required init?(coder aDecoder: NSCoder) {
@@ -85,6 +89,10 @@ open class HeaderView: UIView {
   @objc func closeButtonDidPress(_ button: UIButton) {
     delegate?.headerView(self, didPressCloseButton: button)
   }
+  
+  @objc func downloadButtonDidPress(_ button: UIButton) {
+    delegate?.headerView(self, didPressDownloadButton: button)
+  }
 }
 
 // MARK: - LayoutConfigurable
@@ -99,14 +107,14 @@ extension HeaderView: LayoutConfigurable {
     } else {
       topPadding = 0
     }
-
-    closeButton.frame.origin = CGPoint(
-      x: bounds.width - closeButton.frame.width - 17,
+  
+    downloadButton.frame.origin = CGPoint(
+      x: bounds.width - downloadButton.frame.width - 20,
       y: topPadding
     )
-
-    deleteButton.frame.origin = CGPoint(
-      x: 17,
+    
+    closeButton.frame.origin = CGPoint(
+      x: 20,
       y: topPadding
     )
   }
