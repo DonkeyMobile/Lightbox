@@ -125,7 +125,7 @@ class PageView: UIScrollView {
       self.configureImageView()
       self.pageViewDelegate?.remoteImageDidLoad(image, imageView: self.imageView)
 
-      UIView.animate(withDuration: 0.4) {
+      UIView.animate(withDuration: 0.25) {
         self.loadingIndicator.alpha = 0
       }
     }
@@ -168,7 +168,7 @@ class PageView: UIScrollView {
         return
     }
 
-    let imageViewSize = imageView.frame.size
+    let imageViewSize = contentFrame
     let imageSize = image.size
     let realImageViewSize: CGSize
 
